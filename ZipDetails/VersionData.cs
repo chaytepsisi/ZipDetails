@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ZipDetails
 {
-    class VersionMadeBy
+    class VersionData
     {
         static string[] OSList = new string[] {
             "MS-DOS",
@@ -32,16 +32,22 @@ namespace ZipDetails
             "AtheOS/Syllable"
         };
 
-        public static string GetVersionInfo(byte[] versionData)
-        {
-            string versionText = "";
-            if (versionData[1]<OSList.Length)
-                versionText = OSList[versionData[1]];
-            else
-                 versionText= "Unknown OS (" + versionData[1] + ")";
+        public string OS_Name { get; set; }
+        public string Version { get; set; }
 
-            versionText += " Version: " + versionData[0] / 10 + "." + versionData[1] % 10;
-            return versionText;
+        public VersionData(byte[] versionData)
+        {
+            if (versionData[1] < OSList.Length)
+                OS_Name = OSList[versionData[1]];
+            else
+                OS_Name = "Unknown OS (" + versionData[1] + ")";
+
+            Version = versionData[0] / 10 + "." + versionData[1] % 10;
+        }
+
+        public override string ToString()
+        {
+            return OS_Name + " Version: " + Version + "";
         }
     }
 }

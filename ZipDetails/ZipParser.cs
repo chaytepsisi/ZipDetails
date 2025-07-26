@@ -84,8 +84,8 @@ namespace ZipDetails
             var FileComment = Data.Skip(newOffset).Take(Commons.GetLength(fileCommentLengthCentral)).ToArray();
 
             NextHeaderOffset = newOffset + Commons.GetLength(fileCommentLengthCentral); // Update the offset for the next header
-
-            var CentralHeaderText = "Version Made By: " + Commons.ByteToHexString(versionMadeBy) + Constants.NEWLINE + "-->" + VersionMadeBy.GetVersionInfo(versionMadeBy) + Constants.NEWLINE +
+            VersionData version = new VersionData(versionMadeBy);
+            var CentralHeaderText = "Version Made By: " + Commons.ByteToHexString(versionMadeBy) + Constants.NEWLINE + "-->" + version.ToString() + Constants.NEWLINE +
                 "Version Needed to Extract: " + Commons.ByteToHexString(versionNeededToExtract) + Constants.NEWLINE +
                 "General Purpose Bit Flag: " + Commons.ByteToHexString(generalPurposeBitFlag) + Constants.NEWLINE +
                 "Comp. Method: " + Commons.ByteToHexString(compressionMethodCentral) + Constants.NEWLINE +
