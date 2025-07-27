@@ -49,19 +49,21 @@
     <Compile Include="CentralDirectoryHeader.cs" />
     <Compile Include="Commons.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="EndOfCentralDirectoryHeader.cs" />
+    <Compile Include="ZipDetailsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="ZipDetailsForm.Designer.cs">
+      <DependentUpon>ZipDetailsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LocalHeader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionData.cs" />
-    <Compile Include="ZipParser.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Zip.cs" />
+    <Compile Include="ZipFile.cs" />
+    <EmbeddedResource Include="ZipDetailsForm.resx">
+      <DependentUpon>ZipDetailsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

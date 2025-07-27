@@ -12,12 +12,12 @@ namespace ZipDetails
         
         int NextHeaderOffset= 0;
         public byte[] Data { get; set; }
+
+        //public List<Zip> ZipList { get; set; } = new List<Zip>();
         public ZipParser(byte[] content)
         {
             Data = content;
         }
-        
-        
         /*string ParseLocalHeader()
         {
             var versionNeeded = Data.Skip(Constants.VERSION_NEEDED_OFFSET).Take(Constants.VERSION_NEEDED_LENGTH).ToArray();
@@ -112,7 +112,7 @@ namespace ZipDetails
 
             return CentralHeaderText;
         }*/
-        public string ParseCentralDirectoryEnd()
+        /*public string ParseCentralDirectoryEnd()
         {
             var endOfCentralDirSignature = Data.Skip( Constants.END_OF_CENTRAL_DIR_SIGNATURE_OFFSET).Take(Constants.END_OF_CENTRAL_DIR_SIGNATURE_LENGTH).ToArray();
             if (endOfCentralDirSignature[0] != 0x50 || endOfCentralDirSignature[1] != 0x4b || endOfCentralDirSignature[2] != 0x05 || endOfCentralDirSignature[3] != 0x06)
@@ -141,7 +141,7 @@ namespace ZipDetails
                 Encoding.Default.GetString(zipFileComment);
 
             return CentralDirectoryEndText;
-        }
+        }*/
         public void Parse()
         {
             if (Data[0] != 0x50 || Data[1] != 0x4b || Data[2] != 0x03 || Data[3] != 0x04)
@@ -151,28 +151,30 @@ namespace ZipDetails
             else
             {
                 LocalHeader localHeader = new LocalHeader(Data);
-
-                MessageBox.Show(localHeader.ToString());
-                if (localHeader.CompressedData.Length > 0)
-                {
-                    string zippedDataHex = Commons.ByteToHexString(localHeader.CompressedData.Take(10).ToArray());
-                    MessageBox.Show("Zipped Data Starts with: \n" + zippedDataHex);
-                }
-                else
-                {
-                    MessageBox.Show("No remaining data after local header.");
-                }
+                var zipDetails = localHeader.ToString();
                 NextHeaderOffset = localHeader.NextHeaderOffset;
-
-                Data =Data.Skip(NextHeaderOffset).ToArray();
+                int centralDirectoryOffset = NextHeaderOffset;
+                Data = Data.Skip(NextHeaderOffset).ToArray();
                 CentralDirectoryHeader centralDirectoryHeader = new CentralDirectoryHeader(Data);
                 NextHeaderOffset = centralDirectoryHeader.NextHeaderOffset;
-                MessageBox.Show(centralDirectoryHeader.ToString());
-                //MessageBox.Show( ParseCentralHeader());
+                zipDetails += "\n" + centralDirectoryHeader.ToString();
 
-                Data =Data.Skip(NextHeaderOffset).ToArray();
-                MessageBox.Show(ParseCentralDirectoryEnd());
+                Data = Data.Skip(NextHeaderOffset).ToArray();
+                EndOfCentralDirectoryHeader endOfCentralDirectoryHeader = new EndOfCentralDirectoryHeader(Data);
+                NextHeaderOffset = endOfCentralDirectoryHeader.NextHeaderOffset;
+                zipDetails += "\n" + endOfCentralDirectoryHeader.ToString();
+
+                var offsetValue = Commons.GetLength(endOfCentralDirectoryHeader.CentralDirectoryOffset);
+                zipDetails+= "\nCentral Directory Offset: " + centralDirectoryOffset +
+                    " --> " + offsetValue + " bytes from the start of the file.\n";
+                MessageBox.Show(zipDetails, "ZIP File Details", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        public void ParseMultiple()
+        {
+           
+            
         }
     }
 }

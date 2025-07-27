@@ -55,7 +55,6 @@ namespace ZipDetails
         public int NextHeaderOffset { get; set; }
         public byte[] Data { get; set; }
         public string FileName { get; set; }
-        public Byte[] HeaderData { get; set; }
         public CentralDirectoryHeader(byte[] data)
         {
             Data = data;
