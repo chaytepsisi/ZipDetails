@@ -10,7 +10,7 @@ namespace ZipDetails
     {
         public static string NEWLINE = "\r\n";
 
-        public static int LOCAL_FILE_HEADER_SIGNATURE = 0x04034b50;
+        public static int LOCAL_FILE_HEADER_SIGNATURE = 0x504b0304;
         public static int LOCAL_FILE_HEADER_SIGNATURE_OFFSET = 0;
         public static int LOCAL_FILE_HEADER_SIGNATURE_LENGTH = 4;
         public static int VERSION_NEEDED_OFFSET = 4;
@@ -34,7 +34,7 @@ namespace ZipDetails
         public static int FILENAME_LENGTH_LENGTH = 2;
         public static int EXTRA_FIELD_LENGTH_LENGTH = 2;
 
-
+        public static int CENTRAL_DIR_SIGNATURE = 0x504b0102;
         public static int VERSION_MADE_BY_OFFSET = 4;
         public static int VERSION_MADE_BY_LENGTH = 2;
         public static int VERSION_NEEDED_TO_EXTRACT_OFFSET = 6;
@@ -69,7 +69,7 @@ namespace ZipDetails
         public static int RELATIVE_OFFSET_OF_LOCAL_HEADER_LENGTH_CENTRAL = 4;
 
 
-        public static int END_OF_CENTRAL_DIR_SIGNATURE = 0x06054b50;
+        public static int END_OF_CENTRAL_DIR_SIGNATURE = 0x504b0506;
         public static int END_OF_CENTRAL_DIR_SIGNATURE_OFFSET = 0;
         public static int END_OF_CENTRAL_DIR_SIGNATURE_LENGTH = 4;
         public static int END_OF_CENTRAL_DIR_DISK_NUMBER_OFFSET = 4;

@@ -55,7 +55,7 @@ namespace ZipDetails
             return LocalHeaderText;
 
         }*/
-
+        /*
         string ParseCentralHeader()
         {
             var versionMadeBy = Data.Skip(Constants.VERSION_MADE_BY_OFFSET).Take(Constants.VERSION_MADE_BY_LENGTH).ToArray();
@@ -111,9 +111,8 @@ namespace ZipDetails
                 CentralHeaderText += "FileComment: " + Encoding.Default.GetString(ExtraField);
 
             return CentralHeaderText;
-        }
-
-        string ParseCentralDirectoryEnd()
+        }*/
+        public string ParseCentralDirectoryEnd()
         {
             var endOfCentralDirSignature = Data.Skip( Constants.END_OF_CENTRAL_DIR_SIGNATURE_OFFSET).Take(Constants.END_OF_CENTRAL_DIR_SIGNATURE_LENGTH).ToArray();
             if (endOfCentralDirSignature[0] != 0x50 || endOfCentralDirSignature[1] != 0x4b || endOfCentralDirSignature[2] != 0x05 || endOfCentralDirSignature[3] != 0x06)
@@ -166,9 +165,12 @@ namespace ZipDetails
                 NextHeaderOffset = localHeader.NextHeaderOffset;
 
                 Data =Data.Skip(NextHeaderOffset).ToArray();
-                MessageBox.Show( ParseCentralHeader());
+                CentralDirectoryHeader centralDirectoryHeader = new CentralDirectoryHeader(Data);
+                NextHeaderOffset = centralDirectoryHeader.NextHeaderOffset;
+                MessageBox.Show(centralDirectoryHeader.ToString());
+                //MessageBox.Show( ParseCentralHeader());
 
-                Data=Data.Skip(NextHeaderOffset).ToArray();
+                Data =Data.Skip(NextHeaderOffset).ToArray();
                 MessageBox.Show(ParseCentralDirectoryEnd());
             }
         }
