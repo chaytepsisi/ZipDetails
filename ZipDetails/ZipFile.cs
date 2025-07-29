@@ -28,6 +28,9 @@ namespace ZipDetails
 
             for (int i = 0; i < Data.Length - 4; i++)
             {
+                if (Data[i] == 0x50 && Data[i + 1] == 0x4b && Data[i + 2] == 0x07 && Data[i + 3] == 0x08)
+                    i += 4;
+
                 if (Data[i] == 0x50 && Data[i + 1] == 0x4b && Data[i + 2] == 0x03 && Data[i + 3] == 0x04)
                     localHeaderOffsets.Add(i);
 
