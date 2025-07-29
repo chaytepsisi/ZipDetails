@@ -38,6 +38,12 @@ namespace ZipDetails
                     centralDirectoryEndOffset = i;
             }
 
+            if (localHeaderOffsets.Count == 0)
+            {
+                ZipList = new List<Zip>();
+                MessageBox.Show("Dosyada LocalHeader bulunamadı.");
+                return;
+            }
             for (int i = 0; i < localHeaderOffsets.Count; i++)
             {
                 Zip zip = new Zip
@@ -125,27 +131,9 @@ namespace ZipDetails
             string Message = String.Empty;
             for (int i = 0; i < ZipList.Count; i++)
                 Message += ZipList[i].ToString(flag) + "\n---------------\n";
-
-            Message += EndOfCentralDirectory.ToString();
+            if(EndOfCentralDirectory!=null)
+                Message += EndOfCentralDirectory.ToString();
             return Message;
         }
-        //public string ToString(bool verbose)
-        //{
-        //    string Message = String.Empty;
-        //    for (int i = 0; i < ZipList.Count; i++)
-        //        Message += ZipList[i].ToString() + "\n---------------\n";
-
-        //    Message += EndOfCentralDirectory.ToString();
-
-        //    if (verbose)
-        //    {
-        //        Message += "\n---------------\n";
-        //        for (int i = 0; i < ZipList.Count; i++) {
-        //            Message += Encoding.UTF8.GetString(ZipList[i].ZipLocalHeader.CompressedData) + "\n-------\n";
-        //            Message += Commons.ByteToHexString(ZipList[i].ZipLocalHeader.CompressedData) + "\n- - - - - - - - - - - -\n";
-        //        }
-        //    }
-        //    return Message;
-        //}
     }
 }

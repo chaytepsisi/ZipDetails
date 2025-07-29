@@ -27,7 +27,7 @@ namespace ZipDetails
         public byte[] ZipFileCommentArray { get; set; }
         public int NextHeaderOffset { get; set; }
         public byte[] Data { get; set; }
-
+        public bool IsCorrupted { get; set; }
         public string ZipComment { get; set; }
        
         public EndOfCentralDirectoryHeader(byte[] data)
@@ -57,12 +57,14 @@ namespace ZipDetails
             NextHeaderOffset = Constants.END_OF_CENTRAL_DIR_COMMENT_OFFSET + Commons.GetValue(ZipFileCommentLength);
             if (Signature[0] != 0x50 || Signature[1] != 0x4b || Signature[2] != 0x05 || Signature[3] != 0x06)
             {
-                throw new Exception("Invalid End of Central Directory Signature");
+                IsCorrupted = true;
             }
         }
 
         public override string ToString()
         {
+            if (IsCorrupted)
+                return " ---  BOZUK EndOfCentralDirectoryHeader ----";
             return "End of Central Directory Header:" + Constants.NEWLINE +
                    "Signature: " + Commons.ByteToHexString(Signature) + Constants.NEWLINE +
                    "Disk Number: " + Commons.ByteToHexString(DiskNumber) + Constants.NEWLINE +
