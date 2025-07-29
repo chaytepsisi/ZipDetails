@@ -45,7 +45,7 @@ namespace ZipDetails
             CentralDirectorySize = Data.Skip(Constants.END_OF_CENTRAL_DIR_SIZE_OF_CENTRAL_DIR_OFFSET).Take(Constants.END_OF_CENTRAL_DIR_SIZE_OF_CENTRAL_DIR_LENGTH).ToArray();
             CentralDirectoryOffset = Data.Skip(Constants.END_OF_CENTRAL_DIR_OFFSET_OFFSET).Take(Constants.END_OF_CENTRAL_DIR_OFFSET_LENGTH).ToArray();
             ZipFileCommentLength = Data.Skip(Constants.END_OF_CENTRAL_DIR_COMMENT_LENGTH_OFFSET).Take(Constants.END_OF_CENTRAL_DIR_COMMENT_LENGTH_LENGTH).ToArray();
-            ZipFileCommentArray = Data.Skip(Constants.END_OF_CENTRAL_DIR_COMMENT_OFFSET).Take(Commons.GetLength(ZipFileCommentLength)).ToArray();
+            ZipFileCommentArray = Data.Skip(Constants.END_OF_CENTRAL_DIR_COMMENT_OFFSET).Take(Commons.GetValue(ZipFileCommentLength)).ToArray();
             if(ZipFileCommentArray.Length > 0)
             {
                 ZipComment = Encoding.Default.GetString(ZipFileCommentArray);
@@ -54,7 +54,7 @@ namespace ZipDetails
             {
                 ZipComment = string.Empty;
             }
-            NextHeaderOffset = Constants.END_OF_CENTRAL_DIR_COMMENT_OFFSET + Commons.GetLength(ZipFileCommentLength);
+            NextHeaderOffset = Constants.END_OF_CENTRAL_DIR_COMMENT_OFFSET + Commons.GetValue(ZipFileCommentLength);
             if (Signature[0] != 0x50 || Signature[1] != 0x4b || Signature[2] != 0x05 || Signature[3] != 0x06)
             {
                 throw new Exception("Invalid End of Central Directory Signature");

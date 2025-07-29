@@ -31,6 +31,7 @@
             this.SelectFİleButton = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.ShowContentCbx = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // SelectFİleButton
@@ -38,7 +39,7 @@
             this.SelectFİleButton.Location = new System.Drawing.Point(7, 8);
             this.SelectFİleButton.Margin = new System.Windows.Forms.Padding(4);
             this.SelectFİleButton.Name = "SelectFİleButton";
-            this.SelectFİleButton.Size = new System.Drawing.Size(155, 59);
+            this.SelectFİleButton.Size = new System.Drawing.Size(155, 38);
             this.SelectFİleButton.TabIndex = 0;
             this.SelectFİleButton.Text = "Select Zip File";
             this.SelectFİleButton.UseVisualStyleBackColor = true;
@@ -60,11 +61,22 @@
             this.richTextBox1.TabIndex = 3;
             this.richTextBox1.Text = "";
             // 
+            // ShowContentCbx
+            // 
+            this.ShowContentCbx.AutoSize = true;
+            this.ShowContentCbx.Location = new System.Drawing.Point(12, 46);
+            this.ShowContentCbx.Name = "ShowContentCbx";
+            this.ShowContentCbx.Size = new System.Drawing.Size(115, 22);
+            this.ShowContentCbx.TabIndex = 4;
+            this.ShowContentCbx.Text = "İçeriği Göster";
+            this.ShowContentCbx.UseVisualStyleBackColor = true;
+            // 
             // ZipDetailsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(819, 543);
+            this.Controls.Add(this.ShowContentCbx);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.SelectFİleButton);
@@ -82,6 +94,7 @@
         private System.Windows.Forms.Button SelectFİleButton;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.CheckBox ShowContentCbx;
     }
 }
 

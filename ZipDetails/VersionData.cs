@@ -8,7 +8,7 @@ namespace ZipDetails
 {
     class VersionData
     {
-        static string[] OSList = new string[] {
+        public static string[] OSList = new string[] {
             "MS-DOS",
             "Amiga",
             "OpenVMS",

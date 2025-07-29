@@ -17,7 +17,7 @@ namespace ZipDetails
             }
             return sb.ToString().Trim();
         }
-        public static int GetLength(byte[] lengthArray)
+        public static int GetValue(byte[] lengthArray)
         {
             int length = 0;
             for (int i = lengthArray.Length - 1; i >= 0; i--)

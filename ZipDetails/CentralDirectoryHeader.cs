@@ -55,6 +55,11 @@ namespace ZipDetails
         public int NextHeaderOffset { get; set; }
         public byte[] Data { get; set; }
         public string FileName { get; set; }
+
+        public bool IsDirectory { get; set; }
+        public int EncodingValue{ get; set; }
+
+        VersionData Version;
         public CentralDirectoryHeader(byte[] data)
         {
             Data = data;
@@ -69,7 +74,7 @@ namespace ZipDetails
             CompressionMethod = Data.Skip(Constants.COMPRESSION_METHOD_OFFSET_CENTRAL).Take(Constants.COMPRESSION_METHOD_LENGTH_CENTRAL).ToArray();
             LastModFileTime = Data.Skip(Constants.LAST_MOD_FILE_TIME_OFFSET_CENTRAL).Take(Constants.LAST_MOD_FILE_TIME_LENGTH_CENTRAL).ToArray();
             LastModFileDate = Data.Skip(Constants.LAST_MOD_FILE_DATE_OFFSET_CENTRAL).Take(Constants.LAST_MOD_FILE_DATE_LENGTH_CENTRAL).ToArray();
-            Crc32 = Data.Skip(Constants.CRC32_OFFSET_CENTRAL).Take(Constants.CRC32_LENGTH_CENTRAL).ToArray(); 
+            Crc32 = Data.Skip(Constants.CRC32_OFFSET_CENTRAL).Take(Constants.CRC32_LENGTH_CENTRAL).ToArray();
             CompressedSize = Data.Skip(Constants.COMPRESSED_SIZE_OFFSET_CENTRAL).Take(Constants.COMPRESSED_SIZE_LENGTH_CENTRAL).ToArray();
             UncompressedSize = Data.Skip(Constants.UNCOMPRESSED_SIZE_OFFSET_CENTRAL).Take(Constants.UNCOMPRESSED_SIZE_LENGTH_CENTRAL).ToArray();
             FileNameLength = Data.Skip(Constants.FILENAME_LENGTH_OFFSET_CENTRAL).Take(Constants.FILENAME_LENGTH_LENGTH_CENTRAL).ToArray();
@@ -80,23 +85,26 @@ namespace ZipDetails
             ExternalFileAttributes = Data.Skip(Constants.EXTERNAL_FILE_ATTRIBUTES_OFFSET_CENTRAL).Take(Constants.EXTERNAL_FILE_ATTRIBUTES_LENGTH_CENTRAL).ToArray();
             RelativeOffsetOfLocalHeader = Data.Skip(Constants.RELATIVE_OFFSET_OF_LOCAL_HEADER_OFFSET_CENTRAL).Take(Constants.RELATIVE_OFFSET_OF_LOCAL_HEADER_LENGTH_CENTRAL).ToArray();
             int arrayIndexes = Constants.RELATIVE_OFFSET_OF_LOCAL_HEADER_OFFSET_CENTRAL + Constants.RELATIVE_OFFSET_OF_LOCAL_HEADER_LENGTH_CENTRAL;
-            FileNameArray = Data.Skip(arrayIndexes).Take(Commons.GetLength(FileNameLength)).ToArray();
+            FileNameArray = Data.Skip(arrayIndexes).Take(Commons.GetValue(FileNameLength)).ToArray();
             arrayIndexes += FileNameArray.Length;
-            ExtraFieldArray = Data.Skip(arrayIndexes).Take(Commons.GetLength(ExtraFieldLength)).ToArray();
+            ExtraFieldArray = Data.Skip(arrayIndexes).Take(Commons.GetValue(ExtraFieldLength)).ToArray();
             arrayIndexes += ExtraFieldArray.Length;
-            FileCommentArray = Data.Skip(arrayIndexes).Take(Commons.GetLength(FileCommentLength)).ToArray();
+            FileCommentArray = Data.Skip(arrayIndexes).Take(Commons.GetValue(FileCommentLength)).ToArray();
             arrayIndexes += FileCommentArray.Length;
             //var dataStartOffset = arrayIndexes;
             //HeaderData = Data.Skip(dataStartOffset).Take(Commons.GetLength(CompressedSize)).ToArray(); // Extract the compressed data
             //NextHeaderOffset = dataStartOffset + HeaderData.Length; // Calculate the size of the local header
             NextHeaderOffset = arrayIndexes; // The next header offset is the end of the current header
             FileName = Encoding.Default.GetString(FileNameArray);
+            Version = new VersionData(VersionNeededToExtract);
+            if (Version.OS_Name == VersionData.OSList[0] && ExternalFileAttributes[0] == 0x10)
+                    IsDirectory = true;
+            EncodingValue = Commons.GetValue(InternalFileAttributes);
         }
 
-        public override string ToString()
+        public string ToString(bool flag=false)
         {
-            VersionData version = new VersionData(VersionNeededToExtract);
-            return "Version Needed: " + version.ToString() + Constants.NEWLINE +
+            string message= "Version Needed: " + Version.ToString() + Constants.NEWLINE +
                    "Flag: " + Commons.ByteToHexString(GeneralPurposeBitFlag) + Constants.NEWLINE +
                    "Comp. Method: " + Commons.ByteToHexString(CompressionMethod) + Constants.NEWLINE +
                    "Last Modified Time: " + Commons.ByteToHexString(LastModFileTime) + "-->" + Commons.ParseTime(LastModFileTime) + Constants.NEWLINE +
@@ -111,7 +119,15 @@ namespace ZipDetails
                    "Internal File Attributes: " + Commons.ByteToHexString(InternalFileAttributes) + Constants.NEWLINE +
                    "External File Attributes: " + Commons.ByteToHexString(ExternalFileAttributes) + Constants.NEWLINE +
                    "Relative Offset of Local Header: " + Commons.ByteToHexString(RelativeOffsetOfLocalHeader) + Constants.NEWLINE +
-                   "File Name: " + FileName;
+                   "File Name: " + FileName + Constants.NEWLINE;
+            if (!flag)
+                return message;
+            else
+            {
+                if (ExtraFieldArray.Length > 0)
+                    message += "EXTRA_FIELD: \n" + Constants.NEWLINE + Commons.ByteToHexString(ExtraFieldArray);
+                return message;
+            }
         }
     }
 

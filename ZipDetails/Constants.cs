@@ -33,6 +33,7 @@ namespace ZipDetails
         public static int UNCOMPRESSED_SIZE_LENGTH = 4;
         public static int FILENAME_LENGTH_LENGTH = 2;
         public static int EXTRA_FIELD_LENGTH_LENGTH = 2;
+        public static int LOCAL_FILE_HEADER_SIZE = 30;
 
         public static int CENTRAL_DIR_SIGNATURE = 0x504b0102;
         public static int VERSION_MADE_BY_OFFSET = 4;
@@ -67,7 +68,7 @@ namespace ZipDetails
         public static int EXTERNAL_FILE_ATTRIBUTES_LENGTH_CENTRAL = 4;
         public static int RELATIVE_OFFSET_OF_LOCAL_HEADER_OFFSET_CENTRAL = 42;
         public static int RELATIVE_OFFSET_OF_LOCAL_HEADER_LENGTH_CENTRAL = 4;
-
+        public static int CENTRAL_DIR_HEADER_LENGTH = 46;
 
         public static int END_OF_CENTRAL_DIR_SIGNATURE = 0x504b0506;
         public static int END_OF_CENTRAL_DIR_SIGNATURE_OFFSET = 0;
