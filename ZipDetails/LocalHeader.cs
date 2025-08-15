@@ -16,7 +16,7 @@ namespace ZipDetails
         public byte[] LastModFileDate { get; set; }
         public byte[] Crc32 { get; set; }
         public byte[] CompressedSizeArray { get; set; }
-        public byte[] UncompressedSize { get; set; }
+        public byte[] UncompressedSizeArray { get; set; }
         public byte[] FileNameLength { get; set; }
         public byte[] ExtraFieldLength { get; set; }
         public byte[] FileNameArray { get; set; }
@@ -28,6 +28,7 @@ namespace ZipDetails
         public int CompressionMethod { get; set; }
         public bool IsCorrupted{ get; set; }
         public int CompressedSize { get; set; }
+        public int UnCompressedSize { get; set; }
 
         public string Info { get; set; }
         public LocalHeader(byte[] data)
@@ -45,7 +46,8 @@ namespace ZipDetails
             LastModFileDate = Data.Skip(Constants.LAST_MOD_FILE_DATE_OFFSET).Take(Constants.LAST_MOD_FILE_DATE_LENGTH).ToArray();
             Crc32 = Data.Skip(Constants.CRC32_OFFSET).Take(Constants.CRC32_LENGTH).ToArray();
             CompressedSizeArray = Data.Skip(Constants.COMPRESSED_SIZE_OFFSET).Take(Constants.COMPRESSED_SIZE_LENGTH).ToArray();
-            UncompressedSize = Data.Skip(Constants.UNCOMPRESSED_SIZE_OFFSET).Take(Constants.UNCOMPRESSED_SIZE_LENGTH).ToArray();
+            UncompressedSizeArray = Data.Skip(Constants.UNCOMPRESSED_SIZE_OFFSET).Take(Constants.UNCOMPRESSED_SIZE_LENGTH).ToArray();
+            UnCompressedSize = Commons.GetValue(UncompressedSizeArray);
             FileNameLength = Data.Skip(Constants.FILENAME_LENGTH_OFFSET).Take(Constants.FILENAME_LENGTH_LENGTH).ToArray();
             ExtraFieldLength = Data.Skip(Constants.EXTRA_FIELD_LENGTH_OFFSET).Take(Constants.EXTRA_FIELD_LENGTH_LENGTH).ToArray();
             FileNameArray = Data.Skip(Constants.FILENAME_LENGTH_LENGTH + Constants.EXTRA_FIELD_LENGTH_OFFSET)
@@ -74,7 +76,7 @@ namespace ZipDetails
                     Convert.ToString(BitConverter.ToInt16(LastModFileDate, 0), 2) + Constants.NEWLINE +
                     "CRC32 : " + Commons.ByteToHexString(Crc32) + Constants.NEWLINE +
                     "Compressed Size: " + Commons.ByteToHexString(CompressedSizeArray) + " --> " + Commons.GetValue(CompressedSizeArray) + Constants.NEWLINE +
-                    "Uncompressed Size: " + Commons.ByteToHexString(UncompressedSize) + " --> " + Commons.GetValue(UncompressedSize) + Constants.NEWLINE +
+                    "Uncompressed Size: " + Commons.ByteToHexString(UncompressedSizeArray) + " --> " + Commons.GetValue(UncompressedSizeArray) + Constants.NEWLINE +
                     "File Name Length: " + Commons.ByteToHexString(FileNameLength) + " --> " + Commons.GetValue(FileNameLength) + Constants.NEWLINE +
                     "Extra Field Length: " + Commons.ByteToHexString(ExtraFieldLength) + Constants.NEWLINE +
                     "File Name: "+Encoding.Default.GetString(FileNameArray) + Constants.NEWLINE;

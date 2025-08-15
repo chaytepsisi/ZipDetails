@@ -28,5 +28,38 @@ namespace ZipDetails
             return message;
             //+ Environment.NewLine + "End of Central Directory Header: " + Environment.NewLine + ZipEndOfCentralDirectoryHeader.ToString();
         }   
+
+        public string GetInfo()
+        {
+            string infoMessage = "";
+            if (ZipLocalHeader != null)
+            {
+                if (!IsDirectory())
+                {
+                    infoMessage += ZipLocalHeader.FileName + "\n\t";
+                    if (ZipLocalHeader.UnCompressedSize != 0)
+                    {
+                        infoMessage += "Available Data: " + ZipLocalHeader.CompressedSize + " / " + ZipLocalHeader.CompressedData.Length;
+                        if (ZipLocalHeader.CompressedSize != ZipLocalHeader.CompressedData.Length)
+                            infoMessage += " -- MISSING DATA: "+ (ZipLocalHeader.CompressedSize - ZipLocalHeader.CompressedData.Length)+" bytes";
+                        infoMessage += "\n\tCompression Rate: %" + (100 - ZipLocalHeader.CompressedSize * 100.0 / ZipLocalHeader.UnCompressedSize);
+                    }
+                    else infoMessage += " - - - DATA NOT AVAILABLE - - -";
+                    infoMessage += "\n";
+                }
+                else
+                {
+                    infoMessage += "Directory: " + ZipLocalHeader.FileName + "\n";
+                }
+            }
+            else
+            {
+                if (ZipCentralDirectoryHeader != null)
+                {
+                    infoMessage += ZipCentralDirectoryHeader.FileName + "\n\t - - - DATA NOT AVAILABLE - - -";
+                }
+            }
+            return infoMessage;
+        }
     }
 }

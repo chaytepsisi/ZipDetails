@@ -13,6 +13,7 @@ namespace ZipDetails
 {
     public partial class ZipDetailsForm : Form
     {
+        ZipFile zipFile;
         public ZipDetailsForm()
         {
             InitializeComponent();
@@ -28,11 +29,22 @@ namespace ZipDetails
                 {
                     textBox1.Text = openFileDialog.FileName;
                     byte[] fileContent = System.IO.File.ReadAllBytes(openFileDialog.FileName);
-                    ZipFile zipFile = new ZipFile(fileContent);
+                    zipFile = new ZipFile(fileContent);
                     zipFile.ParseFile();
                     richTextBox1.Text = zipFile.ToString(showContent);
-                    zipFile.Unzip();
+                    
                 }
+            }
+        }
+
+        private void UnzipButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                zipFile.Unzip(RecoverCbx.Checked);
+            }catch (Exception ex)
+            {
+                MessageBox.Show("Error @UnzipButton_Click\n" + ex.Message);
             }
         }
     }

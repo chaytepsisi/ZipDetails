@@ -80,5 +80,36 @@ namespace ZipDetails
                 decompressor.CopyTo(outputFileStream);
 
         }
+
+        public static byte[] ForceDecompress(byte[] input)
+        {
+            List<byte[]> outputByte = new List<byte[]>();
+            var output = new MemoryStream();
+            for (int i = 0; i < input.Length; i++)
+            {
+                try
+                {
+                    using (var compressStream = new MemoryStream(input.Take(input.Length-i).ToArray()))
+                    {
+                        using (var decompressor = new DeflateStream(compressStream, CompressionMode.Decompress))
+                        {
+                            decompressor.CopyTo(output);
+                            output.Position = 0;
+                            outputByte.Add(output.ToArray());    
+                        }
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            if(outputByte.Count > 0 )
+            {
+                outputByte=outputByte.OrderByDescending(t=>t.Length).ToList();
+                return outputByte[0];
+            }
+            return null;
+        }
     }
 }

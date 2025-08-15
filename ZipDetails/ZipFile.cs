@@ -59,8 +59,8 @@ namespace ZipDetails
                     limit = localHeaderOffsets[i + 1];
                 else limit = centralDirectoryHeaderOffsets[0];
 
-                int overHead = Constants.LOCAL_FILE_HEADER_SIZE +  zip.ZipLocalHeader.FileName.Length + zip.ZipLocalHeader.ExtraFieldArray.Length;
-                if (overHead+zip.ZipLocalHeader.CompressedSize > limit- localHeaderOffsets[i])
+                int overHead = Constants.LOCAL_FILE_HEADER_SIZE + zip.ZipLocalHeader.FileName.Length + zip.ZipLocalHeader.ExtraFieldArray.Length;
+                if (overHead + zip.ZipLocalHeader.CompressedSize > limit - localHeaderOffsets[i])
                 {
                     zip.ZipLocalHeader.IsCorrupted = true;
                     zip.ZipLocalHeader.Info = "~~~~ Eksik Bölüm: " + zip.ZipLocalHeader.CompressedSize + " / " + (limit - localHeaderOffsets[i] - overHead) + " ~~~~\n";
@@ -74,7 +74,7 @@ namespace ZipDetails
             EndOfCentralDirectory = new EndOfCentralDirectoryHeader(Data.Skip(centralDirectoryEndOffset).ToArray());
         }
 
-        public void Unzip()
+        public void Unzip(bool force = false)
         {
             string parentDir = Path.Combine(Environment.CurrentDirectory, "Unzipped");
             if (!Directory.Exists(parentDir))
@@ -99,8 +99,15 @@ namespace ZipDetails
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error Deflate @LocalHeader_" + i + " " + ZipList[i].ZipLocalHeader.FileName + "\n" + ex.Message);
-                        success = "-";
+                        if (!force)
+                        {
+                            MessageBox.Show("Error Deflate @LocalHeader_" + i + " " + ZipList[i].ZipLocalHeader.FileName + "\n" + ex.Message);
+                            success = "-";
+                        }
+                        else
+                        {
+                            uncompressedData = Deflate.ForceDecompress(ZipList[i].ZipLocalHeader.CompressedData);
+                        }
                     }
                     try
                     {
@@ -120,22 +127,29 @@ namespace ZipDetails
                     catch (Exception ex)
                     {
                         MessageBox.Show("Error @FileWrite " + ex.Message);
-                        success= "-";   
+                        success = "-";
                     }
                 }
 
-                fileList += success+ZipList[i].ZipLocalHeader.FileName + "\n";
+                fileList += success + ZipList[i].ZipLocalHeader.FileName + "\n";
             }
             File.WriteAllText(Path.Combine(parentDir, "FileList.txt"), fileList);
             Process.Start(parentDir);
         }
-        public string ToString(bool flag=false)
+        public string ToString(bool flag = false)
         {
             string Message = String.Empty;
             for (int i = 0; i < ZipList.Count; i++)
-                Message += ZipList[i].ToString(flag) + "\n---------------\n";
-            if(EndOfCentralDirectory!=null)
-                Message += EndOfCentralDirectory.ToString();
+            {
+                if (!flag)
+                    Message += ZipList[i].GetInfo();
+                else
+                {
+                    Message += ZipList[i].ToString(flag) + "\n---------------\n";
+                    if (EndOfCentralDirectory != null)
+                        Message += EndOfCentralDirectory.ToString();
+                }
+            }
             return Message;
         }
     }
