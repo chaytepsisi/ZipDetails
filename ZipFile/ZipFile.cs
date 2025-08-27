@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Zip_File;
 
-namespace ZipDetails
+namespace Zip_File
 {
     public class ZipFile
     {

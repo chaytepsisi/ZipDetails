@@ -73,23 +73,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CentralDirectoryHeader.cs" />
-    <Compile Include="Commons.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Deflate.cs" />
-    <Compile Include="EndOfCentralDirectoryHeader.cs" />
     <Compile Include="ZipDetailsForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ZipDetailsForm.Designer.cs">
       <DependentUpon>ZipDetailsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="LocalHeader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VersionData.cs" />
-    <Compile Include="Zip.cs" />
-    <Compile Include="ZipFile.cs" />
     <EmbeddedResource Include="ZipDetailsForm.resx">
       <DependentUpon>ZipDetailsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -120,6 +112,10 @@
     <ProjectReference Include="..\..\..\..\Desktop\UZipDotNet\UZipDotNet.csproj">
       <Project>{d156e28a-cfdf-4d83-a5e7-28f2d88cd255}</Project>
       <Name>UZipDotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ZipFile\Zip_File.csproj">
+      <Project>{78487bf1-8d7d-489b-a74a-afa9bd86ffe3}</Project>
+      <Name>Zip_File</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
